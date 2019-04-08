@@ -13,8 +13,7 @@ Requirements
 -----
 
 - [Bash](https://www.gnu.org/software/bash/)
-- [rtmpdump](https://rtmpdump.mplayerhq.hu/)
-- [MPlayer](http://www.mplayerhq.hu/)
+- [mpv](https://mpv.io/)
 
 If you need assistance please check [installing dependencies](#installing-dependencies).
 
@@ -24,21 +23,22 @@ Usage
 
 ```bash
 $ ./tv.sh 
-1) RTP 1                7) TVI24              13) ARTV
-2) RTP 2                8) RTP Memoria        14) ETV
-3) SIC                  9) RTP Internacional  15) Porto Canal
-4) TVI                 10) RTP Madeira        16) Euronews
-5) RTP 3               11) RTP Acores
-6) SIC Noticias        12) RTP Africa
+1) RTP 1                7) TVI24              13) SIC Radical
+2) RTP 2                8) RTP Memoria        14) SIC K
+3) SIC                  9) RTP Internacional  15) ARTV
+4) TVI                 10) RTP Madeira        16) Porto Canal
+5) RTP 3               11) RTP Acores         17) Euronews
+6) SIC Noticias        12) RTP Africa         18) Kuriakos TV
 Which TV channel do you want to watch?
 ```
 
 ```bash
 $ ./radio.sh
-1) Antena1       5) Comercial    9) Renascenca  13) Sudoeste
-2) Antena2       6) Kiss FM     10) RFM         14) TSF
-3) Antena3       7) M80         11) RUC         15) Vodafone
-4) Cidade FM     8) Mega Hits   12) Smooth      16) Radio Zero
+1) Antena1       6) Kiss FM     11) Renascenca  16) Vodafone
+2) Antena2       7) M80         12) RFM         17) Zero
+3) Antena3       8) Mega Hits   13) RUC
+4) Cidade FM     9) MEO Music   14) Smooth
+5) Comercial    10) Radar       15) TSF
 Which radio do you want to listen? 
 ```
 
@@ -48,21 +48,24 @@ Installing dependencies
 
 ```bash
 # Debian / Ubuntu
-$ apt-get install rtmpdump mplayer
+$ apt-get install mpv
 ```
 
 ```bash
 # Arch Linux
-$ pacman -S rtmpdump mplayer
+$ pacman -S mpv
 ```
 
 ```bash
-# Mac OS X
-$ brew install rtmpdump mplayer
+# Mac OS X (two alternatives)
+$ brew install mpv
+$ port install mpv
 ```
 
 How to catch RTMP streams
 -----
+
+For this you will need `iptables` and `rtmpdump`.
 
 ```bash
 # redirect outgoing RTMP traffic to localhost

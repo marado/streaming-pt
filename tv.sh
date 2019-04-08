@@ -1,7 +1,6 @@
 #!/bin/bash
 
-PLAYER="mplayer"
-RTMPDUMP="rtmpdump"
+PLAYER="mpv"
 
 TITLES=(
   "RTP 1"
@@ -16,34 +15,42 @@ TITLES=(
   "RTP Madeira"
   "RTP Acores"
   "RTP Africa"
+  "SIC Radical"
+  "SIC K"
   "ARTV"
-  "ETV"
   "Porto Canal"
   "Euronews"
+  "Kuriakos TV"
 )
 
 STREAMS=(
-  "$RTMPDUMP -r rtmp://rtppullswf2livefs.fplive.net --live -a rtppullswf2live-live -W http://www.rtp.pt/play/player.swf -y 2ch5h264 | $PLAYER -"
-  "$RTMPDUMP -r rtmp://rtppullswf2livefs.fplive.net --live -a rtppullswf2live-live -W http://www.rtp.pt/play/player.swf -y 2ch3h264 | $PLAYER -"
-  "$PLAYER http://live.impresa.pt/live/sic/sic540p.m3u8"
-  "$PLAYER $(wget http://tviplayer.iol.pt/direto/TVI -O - -o /dev/null | grep videoUrl |cut -d\' -f2)"
-  "$RTMPDUMP -r rtmp://rtppullswf2livefs.fplive.net --live -a rtppullswf2live-live -W http://www.rtp.pt/play/player.swf -y 2ch64h264 | $PLAYER -"
-  "$PLAYER http://live.impresa.pt/live/sicnot/sicnot540p.m3u8"
-  "$PLAYER $(wget http://tviplayer.iol.pt/direto/TVI24 -O - -o /dev/null | grep videoUrl |cut -d\' -f2)"
-  "$RTMPDUMP -r rtmp://rtppullswf2livefs.fplive.net --live -a rtppullswf2live-live -W http://www.rtp.pt/play/player.swf -y 2ch80h264 | $PLAYER -"
-  "$RTMPDUMP -r rtmp://rtppullswf2livefs.fplive.net --live -a rtppullswf2live-live -W http://www.rtp.pt/play/player.swf -y 2ch120h264 | $PLAYER -"
-  "$RTMPDUMP -r rtmp://rtppullswf2livefs.fplive.net --live -a rtppullswf2live-live -W http://www.rtp.pt/play/player.swf -y 2ch1016h264H14 | $PLAYER -"
-  "$RTMPDUMP -r rtmp://rtppullswf2livefs.fplive.net --live -a rtppullswf2live-live -W http://www.rtp.pt/play/player.swf -y 2rtpacores | $PLAYER -"
-  "$RTMPDUMP -r rtmp://rtppullswf2livefs.fplive.net --live -a rtppullswf2live-live -W http://www.rtp.pt/play/player.swf -y 2ch27h264 | $PLAYER -"
-  "$PLAYER http://193.126.16.68:1935/livenlin4/mp4:2liveplncleanpub/playlist.m3u8"
-  "$RTMPDUMP -r rtmp://213.13.26.13/live -W http://js.sapo.pt/Projects/Video/160121R1/flash/videojs.swf -y etv_direto | $PLAYER -"
-  "$RTMPDUMP -r rtmp://213.13.26.13/live -W http://js.sapo.pt/Projects/SAPOPlayer/20161028R1/jwplayer.flash.swf -y portocanal | $PLAYER -"
-  "$PLAYER rtsp://ewns-hls-b-stream.hexaglobe.net/rtpeuronewslive/pt_vidan750_rtp.sdp"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/liverepeater/smil:rtp1.smil/playlist.m3u8"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/liverepeater/smil:rtp2.smil/playlist.m3u8"
+  "http://live.impresa.pt/live/sic/sic540p.m3u8"
+  "__tvi"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/livetvhlsDVR/rtpndvr.smil/playlist.m3u8"
+  "http://live.impresa.pt/live/sicnot/sicnot540p.m3u8"
+  "__tvi24"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/liverepeater/smil:rtpmem.smil/playlist.m3u8"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/liverepeater/smil:rtpi.smil/playlist.m3u8"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/liverepeater/smil:rtpmadeira.smil/playlist.m3u8"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/liverepeater/smil:rtpacores.smil/playlist.m3u8"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/liverepeater/smil:rtpafrica.smil/playlist.m3u8"
+  "http://live.impresa.pt/live/sicrad/sicrad540p.m3u8"
+  "http://live.impresa.pt/live/sick/sick540p.m3u8"
+  "http://193.126.16.68:1935/livenlin4/mp4:2liveplncleanpub/playlist.m3u8"
+  "--referrer http://sapo.pt/ https://streamer-b02.videos.sapo.pt/live/portocanal/playlist.m3u8"
+  "__euronews"
+  "http://195.22.11.11:1935/ktv/ktv2/playlist.m3u8"
 )
+
+# dynamic streams
+__tvi() { echo $(wget https://tviplayer.iol.pt/pages/ajax/canaltk.html?canal=TVI -O - -o /dev/null); }
+__tvi24() { echo $(wget wget https://tviplayer.iol.pt/pages/ajax/canaltk.html?canal=TVI24 -O - -o /dev/null); }
+__euronews() { echo $(wget http:$(wget http://pt.euronews.com/api/watchlive.json -O - -o /dev/null | cut -d\" -f4 | sed 's/\\//g') -O - -o /dev/null | cut -d\" -f12 | sed 's/\\//g'); }
 
 # check if dependencies exist
 type $PLAYER &>/dev/null || { echo "$PLAYER is not installed"; exit 1; }
-type $RTMPDUMP &>/dev/null || { echo "$RTMPDUMP is not installed"; exit 1; }
 
 PS3="Which TV channel do you want to watch? "
 select choice in "${TITLES[@]}";
@@ -52,7 +59,12 @@ do
     for i in ${!TITLES[@]}
     do
       if [ "${TITLES[i]}" = "$choice" ]; then
-        eval ${STREAMS[i]}
+        # check if dynamic stream
+        if [ "${STREAMS[i]:0:2}" = "__" ]; then
+          $PLAYER $(${STREAMS[i]})
+        else
+          $PLAYER ${STREAMS[i]}
+        fi
         break
       fi
     done

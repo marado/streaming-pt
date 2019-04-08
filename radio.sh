@@ -1,7 +1,6 @@
 #!/bin/bash
 
-PLAYER="mplayer"
-RTMPDUMP="rtmpdump"
+PLAYER="mpv"
 
 TITLES=(
   "Antena1"
@@ -12,38 +11,39 @@ TITLES=(
   "Kiss FM"
   "M80"
   "Mega Hits"
+  "MEO Music"
+  "Radar"
   "Renascenca"
   "RFM"
   "RUC"
   "Smooth"
-  "Sudoeste"
   "TSF"
   "Vodafone"
-  "Radio Zero"
+  "Zero"
 )
 
 STREAMS=(
-  "$RTMPDUMP -r rtmp://ec24.rtp.pt/liveradio -y antena180a | $PLAYER -"
-  "$RTMPDUMP -r rtmp://ec24.rtp.pt/liveradio -y antena280a | $PLAYER -"
-  "$RTMPDUMP -r rtmp://ec24.rtp.pt/liveradio -y antena380a | $PLAYER -"
-  "$RTMPDUMP -r rtmp://mcrwowza5.mcr.iol.pt/cidadefmlc -y cidadefmlc.sdp | $PLAYER -" 
-  "$RTMPDUMP -r rtmp://mcrwowza5.mcr.iol.pt/comerciallc -y comerciallc.sdp | $PLAYER -"
-  "$PLAYER http://cp5.serverse.com:7104/"
-  "$RTMPDUMP -r rtmp://mcrwowza3.mcr.iol.pt/m80lc -y m80lc.sdp | $PLAYER -"
-  "$PLAYER http://7719.live.streamtheworld.com/MEGA_HITSAAC"
-  "$PLAYER http://7719.live.streamtheworld.com/RADIO_RENASCENCAAAC"
-  "$PLAYER http://7719.live.streamtheworld.com/RFMAAC"
-  "$PLAYER http://ruc.midi-club.net:8000/"
-  "$RTMPDUMP -r rtmp://mcrwowza6.mcr.iol.pt/smoothlc -y smoothlc.sdp | $PLAYER -"
-  "$RTMPDUMP -r rtmp://live.livextend.com/liveswtmn -y swtmns1 | $PLAYER -"
-  "$PLAYER http://tsfdirecto.tsf.pt/tsfdirecto.aac"
-  "$PLAYER -user-agent 'Mozilla/5.0 (X11; Linux x86_64)' http://mcrscast.mcr.iol.pt/vodafone"
-  "$PLAYER http://stream.radiozero.pt:8000/zero128.mp3"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/liveradio/antena180a/playlist.m3u8"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/liveradio/antena280a/playlist.m3u8"
+  "--referrer http://www.rtp.pt https://streaming-live.rtp.pt/liveradio/antena380a/playlist.m3u8"
+  "http://mcrwowza5.mcr.iol.pt/cidade/ngrp:cidade.stream_all/playlist.m3u8"
+  "http://mcrwowza3.mcr.iol.pt/comercial/ngrp:comercial.stream_all/playlist.m3u8"
+  "http://162.210.196.217:8070/stream.mp3"
+  "http://mcrwowza5.mcr.iol.pt/m80/ngrp:m80.stream_all/playlist.m3u8"
+  "http://19573.live.streamtheworld.com:3690/MEGA_HITSAAC"
+  "http://centova.radios.pt/proxy/495"
+  "http://centova.radios.pt:8497/stream"
+  "http://19573.live.streamtheworld.com:3690/RADIO_RENASCENCAAAC"
+  "http://19573.live.streamtheworld.com:3690/RFMAAC"
+  "http://ruc.midi-club.net:8000/"
+  "http://mcrwowza3.mcr.iol.pt/smooth/ngrp:smooth.stream_all/playlist.m3u8"
+  "http://tsfdirecto.tsf.pt/tsfdirecto.aac"
+  "-user-agent 'Mozilla/5.0 (X11; Linux x86_64)' http://mcrscast.mcr.iol.pt/vodafone"
+  "http://stream.radiozero.pt:8000/zero128.mp3"
 )
 
 # check if dependencies exist
 type $PLAYER &>/dev/null || { echo "$PLAYER is not installed"; exit 1; }
-type $RTMPDUMP &>/dev/null || { echo "$RTMPDUMP is not installed"; exit 1; }
 
 PS3="Which radio do you want to listen? "
 select radio in "${TITLES[@]}";
@@ -52,7 +52,7 @@ do
     for i in ${!TITLES[@]}
     do
       if [ "${TITLES[i]}" = "$radio" ]; then
-        eval ${STREAMS[i]}
+        $PLAYER ${STREAMS[i]}
         break
       fi
     done
